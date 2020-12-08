@@ -1,1 +1,1 @@
-window.safe = require('safe-regex');
+window.safe = require('vuln-regex-detector');

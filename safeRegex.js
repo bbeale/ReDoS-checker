@@ -1,6 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-window.safe = require('safe-regex');
-},{"safe-regex":7}],2:[function(require,module,exports){
+window.safe = require('vuln-regex-detector');
+},{"vuln-regex-detector":7}],2:[function(require,module,exports){
 var util      = require('./util');
 var types     = require('./types');
 var sets      = require('./sets');
@@ -519,13 +519,13 @@ var types = parse.types;
 module.exports = function (re, opts) {
     if (!opts) opts = {};
     var replimit = opts.limit === undefined ? 25 : opts.limit;
-    
+
     if (isRegExp(re)) re = re.source;
     else if (typeof re !== 'string') re = String(re);
-    
+
     try { re = parse(re) }
     catch (err) { return false }
-    
+
     var reps = 0;
     return (function walk (node, starHeight) {
         if (node.type === types.REPETITION) {
@@ -534,7 +534,7 @@ module.exports = function (re, opts) {
             if (starHeight > 1) return false;
             if (reps > replimit) return false;
         }
-        
+
         if (node.options) {
             for (var i = 0, len = node.options.length; i < len; i++) {
                 var ok = walk({ stack: node.options[i] }, starHeight);
@@ -543,12 +543,12 @@ module.exports = function (re, opts) {
         }
         var stack = node.stack || (node.value && node.value.stack);
         if (!stack) return true;
-        
+
         for (var i = 0; i < stack.length; i++) {
             var ok = walk(stack[i], starHeight);
             if (!ok) return false;
         }
-        
+
         return true;
     })(re, 0);
 };
